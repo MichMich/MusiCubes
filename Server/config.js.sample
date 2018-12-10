@@ -1,0 +1,13 @@
+const config = {
+  mqtt: {
+    server: 'mqtt://mqtt.server.net',
+    user: 'username',
+    password: 'password'
+  },
+  sonos: {
+    baseUrl: 'http://localhost:5005/',
+    room: 'Livingroom'
+  }
+}
+
+module.exports = config
