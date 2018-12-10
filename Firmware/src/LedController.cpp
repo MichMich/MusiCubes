@@ -9,6 +9,7 @@ LedController::LedController()
 void LedController::init()
 {
     FastLED.addLeds<NEOPIXEL, 3>(_leds, NUM_LEDS);
+    FastLED.setMaxPowerInVoltsAndMilliamps(5,1000);
 
     for (int i = 0; i < NUM_LEDS; i++) {
         _targetColors[i] = CRGB::Black;
@@ -101,7 +102,7 @@ void LedController::processPixels()
                 newColor = CRGB(0, 0, 255);
                 break;
             default:
-                newColor = CRGB(64, 0, 64);
+                newColor = CRGB(128, 0, 128);
                 break;
         }
 
