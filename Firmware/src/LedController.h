@@ -7,10 +7,12 @@
 #define NUM_LEDS 125
 #define RESET_DELAY 2000
 
-enum LightState {
-  DefaultState,
-  HeatEffect,
-  CoolEffect
+struct Colors {
+    CRGB newCube = CRGB(0, 0, 255);
+    CRGB cubeRemoved = CRGB(255, 0, 0);
+    CRGB playing = CRGB(255, 0, 255);
+    CRGB stopped = CRGB(0, 0, 0);
+    CRGB buttonPressed = CRGB(0, 255, 0);
 };
 
 class LedController {
@@ -18,24 +20,12 @@ class LedController {
         LedController();
         void init();
         void handle();
-        void setBrightness(byte brightness);
-        byte getBrightness();
-        void coolEffect();
-        void heatEffect();
+        void flashColor(CRGB color);
+        void setBaseColor(CRGB color);
 
     private:
         CRGB _leds[NUM_LEDS];
-        CRGB _targetColors[NUM_LEDS];
-        elapsedMillis _resetTimer;
-        unsigned long _tick;
-        byte _ledBrightness;
-        LightState _lightState;
-        int _processedPixels;
-        int _currentPixelA;
-        int _currentPixelB;
-
+        CRGB _baseColor;
+        bool _needsUpdate;
         void fadePixels();
-        void processPixels();
-        void setLightState(LightState state);
-        int overflow(int number, int add, int max);
 };

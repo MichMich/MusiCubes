@@ -1,3 +1,10 @@
-const char* mqtt_server = "mqtt.server.net";
-const char* mqtt_user = "username";
-const char* mqtt_password = "password";
+#ifndef CONFIG_H
+#define CONFIG_H
+
+struct Config {
+  const char* mqtt_server = "mqtt.server.net";
+  const char* mqtt_user = "username";
+  const char* mqtt_password = "password";
+};
+
+#endif
