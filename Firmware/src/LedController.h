@@ -6,7 +6,8 @@
 
 #define NUM_LEDS 125
 #define RESET_DELAY 2000
-#define FADE_SPEED 4
+#define FADE_SPEED 8
+#define SPARKLE_SPEED 150
 
 struct Colors {
     CRGB newCube = CRGB(0, 0, 255);
@@ -14,6 +15,11 @@ struct Colors {
     CRGB playing = CRGB(255, 0, 255);
     CRGB stopped = CRGB(0, 0, 0);
     CRGB buttonPressed = CRGB(0, 255, 0);
+    CRGB transitioning = CRGB(128, 0, 255);
+};
+
+enum Effect {
+    Sparkle
 };
 
 class LedController {
@@ -23,11 +29,17 @@ class LedController {
         void handle();
         void flashColor(CRGB color);
         void setBaseColor(CRGB color);
+        void setEffectColor(CRGB color);
+        void setEffect(Effect effect);
 
     private:
         CRGB _leds[NUM_LEDS];
+        CRGB _targetColors[NUM_LEDS];
         CRGB _baseColor;
+        CRGB _effectColor;
         bool _needsUpdate;
-        int8_t _tick;
+        Effect _effect;
+        uint8_t _tick;
         void fadePixels();
+        void sparkle();
 };
