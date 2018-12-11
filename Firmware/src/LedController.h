@@ -6,6 +6,7 @@
 
 #define NUM_LEDS 125
 #define RESET_DELAY 2000
+#define FADE_SPEED 2
 
 struct Colors {
     CRGB newCube = CRGB(0, 0, 255);
@@ -27,5 +28,6 @@ class LedController {
         CRGB _leds[NUM_LEDS];
         CRGB _baseColor;
         bool _needsUpdate;
+        int8_t _tick;
         void fadePixels();
 };
