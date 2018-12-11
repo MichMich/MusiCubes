@@ -27,7 +27,7 @@ bool RFIDReader::cubePresent() {
 
 void RFIDReader::readCube() {
   if ( !_mfrc522.PICC_IsNewCardPresent() || !_mfrc522.PICC_ReadCardSerial()) {
-    cubeChanged(NO_CUBE_IDENTIFIER);
+    changeCubeIfDifferent(NO_CUBE_IDENTIFIER);
 		return;
 	}
 

@@ -3,10 +3,10 @@
 #include <MFRC522.h>
 #include <elapsedMillis.h>
 
-#define RFID_READ_INTERVAL 250
 #define MFRC522_RST_PIN D1
 #define MFRC522_SS_PIN  D2
 
+#define RFID_READ_INTERVAL 250
 #define NO_CUBE_IDENTIFIER "00:00:00:00"
 
 typedef void (*CubeChangeCallback)(String cubeUID);
