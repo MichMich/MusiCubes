@@ -1,4 +1,4 @@
-var config = require('config.js')
+var config = require('./config.js')
 var mqtt = require('mqtt')
 var axios = require('axios')
 var client  = mqtt.connect(config.mqtt.server ,{ username: config.mqtt.username, password: config.mqtt.password })
