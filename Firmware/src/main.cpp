@@ -19,15 +19,15 @@ void buttonChanged(uint8_t buttonIndex, bool state);
 void setup() {
   Serial.begin(9600);
 
-  ledController.init();
-  mqttManager.init();
-  rfidReader.init();
-  touchManager.init();
-
   WiFiManager wifiManager;
   wifiManager.autoConnect("MusiCubes");
 
   ArduinoOTA.begin();
+
+  ledController.init();
+  mqttManager.init();
+  rfidReader.init();
+  touchManager.init();
 
   rfidReader.setCubeChangeCallback(cubeChanged);
   touchManager.setButtonChangeCallback(buttonChanged);
