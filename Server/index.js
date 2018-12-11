@@ -6,6 +6,7 @@ var playlist = require('./playlist.js')
 const baseUrl = config.sonos.baseUrl + '/' + config.sonos.room + '/'
 const CancelToken = axios.CancelToken;
 var cancelToken = null
+var lastPlayerState = null
 
 console.log(playlist)
 
@@ -18,9 +19,11 @@ client.on('connect', function () {
   })
 })
 client.on('message', function (topic, message) {
-  const uri = getMusiCube(message)
-  if (!uri) return console.log('Unknown MusiCube: ' + message)
-  requestSonosUri(uri)
+  if (topic == 'musicubes/cube') {
+    const uri = getMusiCube(message)
+    if (!uri) return console.log('Unknown MusiCube: ' + message)
+    requestSonosUri(uri)
+  }
 })
 
 function getMusiCube(identifier) {
@@ -51,3 +54,20 @@ function requestSonosUri(uri) {
       console.log(uri + ' is not a valid endpoint.')
     })
 }
+
+function getPlayerState() {
+  const uri = baseUrl + 'state';
+  axios.get(uri)
+    .then(result => {
+      if (result.data.playbackState && lastPlayerState != result.data.playbackState) {
+        client.publish('musicubes/state', result.data.playbackState, {retain: true})
+        lastPlayerState = result.data.playbackState
+      }
+      setTimeout(getPlayerState, 2000)
+    })
+    .catch(e => {
+      console.log('Could not fetch player state. Retry in 5 seconds.');
+      setTimeout(getPlayerState, 1000)
+    })
+}
+getPlayerState();
