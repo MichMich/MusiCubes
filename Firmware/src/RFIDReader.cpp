@@ -2,6 +2,7 @@
 
 RFIDReader::RFIDReader() : _mfrc522(MFRC522_SS_PIN, MFRC522_RST_PIN){
   _currentCube = NO_CUBE_IDENTIFIER;
+  _checkCount = 0;
 }
 
 void RFIDReader::init() {
@@ -26,11 +27,18 @@ bool RFIDReader::cubePresent() {
 }
 
 void RFIDReader::readCube() {
-  if ( !_mfrc522.PICC_IsNewCardPresent() || !_mfrc522.PICC_ReadCardSerial()) {
+  if (_checkCount > RFID_CHECK_REPEAT) {
     changeCubeIfDifferent(NO_CUBE_IDENTIFIER);
+    _checkCount = 0;
+    return;
+  }
+
+  if ( !_mfrc522.PICC_IsNewCardPresent() || !_mfrc522.PICC_ReadCardSerial()) {
+    _checkCount++;
 		return;
 	}
 
+  _checkCount = 0;
   char uid[16];
   sprintf(uid, "%02x:%02x:%02x:%02x", _mfrc522.uid.uidByte[0], _mfrc522.uid.uidByte[1], _mfrc522.uid.uidByte[2], _mfrc522.uid.uidByte[3]);
   changeCubeIfDifferent(String(uid));

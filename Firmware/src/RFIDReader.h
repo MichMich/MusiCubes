@@ -6,7 +6,8 @@
 #define MFRC522_RST_PIN D1
 #define MFRC522_SS_PIN  D2
 
-#define RFID_READ_INTERVAL 250
+#define RFID_READ_INTERVAL 100
+#define RFID_CHECK_REPEAT 2
 #define NO_CUBE_IDENTIFIER "00:00:00:00"
 
 typedef void (*CubeChangeCallback)(String cubeUID);
@@ -24,6 +25,7 @@ class RFIDReader {
     elapsedMillis _readTimer;
     String _currentCube;
     CubeChangeCallback _cubeChangedCallback;
+    int8_t _checkCount;
     void readCube();
     bool isChanged(String cubeUID);
     void cubeChanged(String cubeUID);

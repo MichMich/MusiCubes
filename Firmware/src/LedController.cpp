@@ -18,7 +18,10 @@ void LedController::init()
 void LedController::handle()
 {
     if (_needsUpdate) {
-        fadePixels();
+        _tick++;
+        if (_tick % FADE_SPEED == 0) {
+            fadePixels();
+        }
     }
 }
 
