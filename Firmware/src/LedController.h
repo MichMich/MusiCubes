@@ -6,7 +6,7 @@
 
 #define NUM_LEDS 125
 #define RESET_DELAY 2000
-#define FADE_SPEED 2
+#define FADE_SPEED 4
 
 struct Colors {
     CRGB newCube = CRGB(0, 0, 255);

@@ -14,6 +14,7 @@ TouchManager touchManager;
 // Define the callbacks. The implementation is at the bottom.
 void cubeChanged(String cubeUID);
 void buttonChanged(uint8_t buttonIndex, bool state);
+void playStateChanged(PlayState playState);
 
 // Setup & Loop
 void setup() {
@@ -31,6 +32,7 @@ void setup() {
 
   rfidReader.setCubeChangeCallback(cubeChanged);
   touchManager.setButtonChangeCallback(buttonChanged);
+  mqttManager.setPlayStateChangedCallback(playStateChanged);
 }
 
 void loop() {
@@ -47,11 +49,22 @@ void cubeChanged(String cubeUID) {
 
   mqttManager.publishCubeIdentifier(cubeUID);
   if (rfidReader.cubePresent()) {
-    ledController.setBaseColor(colors.playing);
     ledController.flashColor(colors.newCube);
   } else {
-    ledController.setBaseColor(colors.stopped);
     ledController.flashColor(colors.cubeRemoved);
+  }
+}
+
+void playStateChanged(PlayState playState) {
+  Colors colors;
+
+  switch (playState) {
+    case Playing:
+      ledController.setBaseColor(colors.playing);
+    break;
+    default:
+      ledController.setBaseColor(colors.stopped);
+    break;
   }
 }
 
