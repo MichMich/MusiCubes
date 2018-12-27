@@ -14,7 +14,8 @@ struct Colors {
     CRGB cubeRemoved = CRGB(255, 0, 0);
     CRGB playing = CRGB(255, 0, 255);
     CRGB stopped = CRGB(0, 0, 0);
-    CRGB buttonPressed = CRGB(0, 255, 0);
+    CRGB button1Pressed = CRGB(0, 255, 0);
+    CRGB button2Pressed = CRGB(0, 255, 255);
     CRGB transitioning = CRGB(128, 0, 255);
 };
 

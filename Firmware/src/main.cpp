@@ -73,6 +73,12 @@ void playStateChanged(PlayState playState) {
 void buttonChanged(uint8_t buttonIndex, bool state) {
   Colors colors;
 
+  // Serial.print(buttonIndex);
+  // Serial.print(": ");
+  // Serial.println(state);
+
   mqttManager.publishButtonState(buttonIndex, state);
-  ledController.flashColor(colors.buttonPressed);
+  if (state) {
+    ledController.flashColor(buttonIndex == 0 ? colors.button1Pressed : colors.button2Pressed);
+  }
 }

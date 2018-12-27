@@ -9,7 +9,7 @@ LedController::LedController()
 
 void LedController::init()
 {
-    FastLED.addLeds<NEOPIXEL, 3>(_leds, NUM_LEDS);
+    FastLED.addLeds<NEOPIXEL, 8>(_leds, NUM_LEDS);
     FastLED.setMaxPowerInVoltsAndMilliamps(5,750);
 
     FastLED.clear();

@@ -3,8 +3,8 @@
 #include <MFRC522.h>
 #include <elapsedMillis.h>
 
-#define MFRC522_RST_PIN D1
-#define MFRC522_SS_PIN  D2
+#define MFRC522_RST_PIN D3
+#define MFRC522_SS_PIN  D4
 
 #define RFID_READ_INTERVAL 100
 #define RFID_CHECK_REPEAT 3
