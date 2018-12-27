@@ -19,13 +19,13 @@ void playStateChanged(PlayState playState);
 // Setup & Loop
 void setup() {
   Serial.begin(9600);
+  ledController.init();
 
   WiFiManager wifiManager;
   wifiManager.autoConnect("MusiCubes");
 
   ArduinoOTA.begin();
 
-  ledController.init();
   mqttManager.init();
   rfidReader.init();
   touchManager.init();
