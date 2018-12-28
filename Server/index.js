@@ -3,6 +3,9 @@ var mqtt = require('mqtt')
 var axios = require('axios')
 var client  = mqtt.connect(config.mqtt.server ,{ username: config.mqtt.username, password: config.mqtt.password })
 var playlist = require('./playlist.js')
+var express = require('express')
+var app = express()
+
 const baseUrl = config.sonos.baseUrl + '/' + config.sonos.room + '/'
 const CancelToken = axios.CancelToken;
 var cancelToken = null
@@ -10,6 +13,37 @@ var lastPlayerState = null
 
 console.log(playlist)
 
+// HTTP SERVER
+app.get('/cube/:uid', function (req, res) {
+  console.log(req.params)
+  const uri = getMusiCube(req.params.uid)
+  if (!uri) {
+    res.send('Unknown MusiCube: ' + req.params.uid)
+    return console.log('Unknown MusiCube: ' + req.params.uid)
+  }
+  requestSonosUri(uri)
+  res.send('OK')
+})
+app.get('/button/:button/:state', function (req, res) {
+  console.log(req.params)
+
+  if (req.params.button == '0' && req.params.state == '1') {
+    requestSonosUri('volume/+3')
+  } else if (req.params.button == '1' && req.params.state == '1') {
+    requestSonosUri('volume/-3')
+  }
+
+  res.send('OK')
+})
+app.get('/state', function (req,res) {
+  axios.get(baseUrl + 'state')
+    .then(result => {
+      res.send(result.data.playbackState)
+    })
+})
+app.listen(config.http.port, () => console.log(`MusiCubes app listening on port ${config.http.port}!`))
+
+// MQTT SERVER
 client.on('connect', function () {
   client.subscribe('musicubes/#', function (err) {
     if (err) {
@@ -23,6 +57,10 @@ client.on('message', function (topic, message) {
     const uri = getMusiCube(message)
     if (!uri) return console.log('Unknown MusiCube: ' + message)
     requestSonosUri(uri)
+  } else if (topic == 'musicubes/buttons/0' && message == '1') {
+    requestSonosUri('volume/+3')
+  } else if (topic == 'musicubes/buttons/1' && message == '1') {
+    requestSonosUri('volume/-3')
   }
 })
 

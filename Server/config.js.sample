@@ -1,4 +1,7 @@
 const config = {
+  http: {
+    port: 8282
+  },
   mqtt: {
     server: 'mqtt://mqtt.server.net',
     username: 'username',
