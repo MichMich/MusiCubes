@@ -8,7 +8,7 @@
 #define TOUCH_THRESHOLD_TOUCH 255
 #define TOUCH_THRESHOLD_RELEASE 128
 #define TOUCH_CHECK_INTERVAL 10
-#define TOUCH_VALIDATION 5
+#define TOUCH_VALIDATION 3
 
 typedef void (*ButtonChangeCallback)(uint8_t button, bool state);
 

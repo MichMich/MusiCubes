@@ -3,12 +3,12 @@
 
 #include "RFIDReader.h"
 #include "LedController.h"
-#include "MQTTManager.h"
+#include "HTTPManager.h"
 #include "TouchManager.h"
 
 LedController ledController;
 RFIDReader rfidReader;
-MQTTManager mqttManager;
+HTTPManager httpManager;
 TouchManager touchManager;
 
 // Define the callbacks. The implementation is at the bottom.
@@ -26,18 +26,18 @@ void setup() {
 
   ArduinoOTA.begin();
 
-  mqttManager.init();
+  httpManager.init();
   rfidReader.init();
   touchManager.init();
 
   rfidReader.setCubeChangeCallback(cubeChanged);
   touchManager.setButtonChangeCallback(buttonChanged);
-  mqttManager.setPlayStateChangedCallback(playStateChanged);
+  httpManager.setPlayStateChangedCallback(playStateChanged);
 }
 
 void loop() {
   ArduinoOTA.handle();
-  mqttManager.handle();
+  httpManager.handle();
   rfidReader.handle();
   touchManager.handle();
   ledController.handle();
@@ -47,7 +47,7 @@ void loop() {
 void cubeChanged(String cubeUID) {
   Colors colors;
 
-  mqttManager.publishCubeIdentifier(cubeUID);
+  httpManager.publishCubeIdentifier(cubeUID);
   if (rfidReader.cubePresent()) {
     ledController.setBaseColor(colors.newCube);
   } else {
@@ -77,7 +77,8 @@ void buttonChanged(uint8_t buttonIndex, bool state) {
   // Serial.print(": ");
   // Serial.println(state);
 
-  mqttManager.publishButtonState(buttonIndex, state);
+  httpManager.publishButtonState(buttonIndex, state);
+
   if (state) {
     ledController.flashColor(buttonIndex == 0 ? colors.button1Pressed : colors.button2Pressed);
   }

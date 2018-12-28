@@ -5,6 +5,8 @@ struct Config {
   const char* mqtt_server = "mqtt.server.net";
   const char* mqtt_user = "username";
   const char* mqtt_password = "password";
+  const char* http_server = "192.168.0.100";
+  const char* http_port = "8282";
 };
 
 #endif

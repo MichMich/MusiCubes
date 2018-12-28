@@ -45,6 +45,10 @@ void TouchManager::checkStates() {
     _lastStates = newStates;
   }
 
+  // Serial.print(newStates);
+  // Serial.print(" - ");
+  // Serial.println(_validationCount);
+
   if (_validationCount >= TOUCH_VALIDATION) {
     setStates(newStates);
   }
