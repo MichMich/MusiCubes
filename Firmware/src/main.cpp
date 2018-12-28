@@ -49,9 +49,9 @@ void cubeChanged(String cubeUID) {
 
   mqttManager.publishCubeIdentifier(cubeUID);
   if (rfidReader.cubePresent()) {
-    ledController.flashColor(colors.newCube);
+    ledController.setBaseColor(colors.newCube);
   } else {
-    ledController.flashColor(colors.cubeRemoved);
+    ledController.setBaseColor(colors.cubeRemoved);
   }
 }
 
@@ -62,6 +62,8 @@ void playStateChanged(PlayState playState) {
     case Playing:
       ledController.setBaseColor(colors.playing);
     break;
+    case Transitioning:
+      ledController.setBaseColor(colors.transitioning);
     default:
       ledController.setBaseColor(colors.stopped);
     break;

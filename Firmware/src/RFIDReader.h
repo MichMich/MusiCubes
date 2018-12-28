@@ -7,7 +7,7 @@
 #define MFRC522_SS_PIN  D2
 
 #define RFID_READ_INTERVAL 100
-#define RFID_CHECK_REPEAT 2
+#define RFID_CHECK_REPEAT 3
 #define NO_CUBE_IDENTIFIER "00:00:00:00"
 
 typedef void (*CubeChangeCallback)(String cubeUID);
