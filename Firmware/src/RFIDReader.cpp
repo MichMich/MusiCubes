@@ -53,6 +53,7 @@ void RFIDReader::cubeChanged(String cubeUID) {
   if (RFID_DEBUG) {
     Serial.println(String("CubeUID: " + cubeUID));
   }
+  changeTimer = 0;
   _currentCube = cubeUID;
   _cubeChangedCallback(cubeUID);
 }

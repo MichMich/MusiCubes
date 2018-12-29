@@ -21,6 +21,8 @@ class RFIDReader {
     void handle();
     void setCubeChangeCallback(CubeChangeCallback callback);
     bool cubePresent();
+    elapsedMillis changeTimer;
+
 
   private:
     MFRC522 _mfrc522;

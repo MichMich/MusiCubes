@@ -6,6 +6,8 @@
 #include "HTTPManager.h"
 #include "TouchManager.h"
 
+#define TOUCH_IGNORE_AFTER_CUBE_CHANGE 1000
+
 LedController ledController;
 RFIDReader rfidReader;
 HTTPManager httpManager;
@@ -74,6 +76,10 @@ void buttonChanged(uint8_t buttonIndex, bool state) {
   Colors colors;
 
   if (state) {
+    if (rfidReader.changeTimer < TOUCH_IGNORE_AFTER_CUBE_CHANGE) {
+      Serial.println("Touch ignored because the cube has recently changed.");
+      return;
+    }
     httpManager.publishButtonState(buttonIndex, state);
     ledController.flashColor(buttonIndex == 0 ? colors.button1Pressed : colors.button2Pressed);
   }
