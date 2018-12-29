@@ -1,5 +1,4 @@
 #include <Arduino.h>
-#include <ESP8266HTTPClient.h>
 #include <elapsedMillis.h>
 #include "config.h"
 
@@ -24,10 +23,10 @@ class HTTPManager {
 
   private:
     Config _config;
-    HTTPClient _http;
     PlayStateChangedCallback _playStateChangedCallback;
-    String serverUrl(String endpoint);
     elapsedMillis _stateUpdateTimer;
     String _lastState;
     void checkState();
+    String serverUrl(String endpoint);
+    String makeRequest(String uri);
 };
