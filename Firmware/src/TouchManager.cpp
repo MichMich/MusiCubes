@@ -34,7 +34,10 @@ void TouchManager::configureSensors() {
     }
 
     _sensors[i].setThresholds(TOUCH_THRESHOLD_TOUCH, TOUCH_THRESHOLD_RELEASE);
-    // _sensors[i].writeRegister();
+
+    // Only activate sensor 0.
+    _sensors[i].writeRegister(MPR121_ECR, 0b00000001);
+    _sensors[i].writeRegister(MPR121_AUTOCONFIG0, 0b00010011);
   }
 }
 
@@ -42,6 +45,15 @@ void TouchManager::checkStates() {
   for (uint8_t i = 0; i < TOUCH_SENSORS; i++) {
     uint16_t newState = _sensors[i].touched() & 0b00000001;
     if (newState != _lastStates[i]) {
+      if (TOUCH_DEBUG) {
+        Serial.print("Button " + String(i) + ": ");
+        Serial.print(String(newState));
+
+        Serial.print(" - (B: " +  String(_sensors[i].baselineData(0)));
+        Serial.print(" F: " +  String(_sensors[i].filteredData(0)));
+        Serial.print(" D: " +  String(_sensors[i].baselineData(0) - _sensors[i].filteredData(0)));
+        Serial.println(")");
+      }
       _buttonChangeCallback(i, newState);
       _lastStates[i] = newState;
     }

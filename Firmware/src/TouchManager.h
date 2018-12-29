@@ -2,11 +2,13 @@
 #include "Adafruit_MPR121.h"
 #include <elapsedMillis.h>
 
+#define TOUCH_DEBUG true
+
 #define TOUCH_SDA D1
 #define TOUCH_SCL D2
 #define TOUCH_SENSORS 2
 #define TOUCH_THRESHOLD_TOUCH 255
-#define TOUCH_THRESHOLD_RELEASE 250
+#define TOUCH_THRESHOLD_RELEASE 16
 #define TOUCH_CHECK_INTERVAL 25
 
 typedef void (*ButtonChangeCallback)(uint8_t button, bool state);
