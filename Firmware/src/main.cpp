@@ -73,11 +73,6 @@ void playStateChanged(PlayState playState) {
 void buttonChanged(uint8_t buttonIndex, bool state) {
   Colors colors;
 
-  Serial.print("BUTTON ");
-  Serial.print(buttonIndex);
-  Serial.print(": ");
-  Serial.println(state);
-
   if (state) {
     httpManager.publishButtonState(buttonIndex, state);
     ledController.flashColor(buttonIndex == 0 ? colors.button1Pressed : colors.button2Pressed);
