@@ -20,7 +20,6 @@ void HTTPManager::publishCubeIdentifier(String cubeUID) {
 }
 
 void HTTPManager::publishButtonState(uint8_t buttonIndex, bool state) {
-  if (!state) return;
   makeRequest("button/" + String(buttonIndex) + "/" + String(state ? "1" : "0"));
 }
 
@@ -57,11 +56,13 @@ String HTTPManager::makeRequest(String uri) {
   int responseCode = http.GET();
   String response = responseCode == HTTP_CODE_OK ? http.getString() : "";
 
-  Serial.print(url);
-  Serial.print(" (");
-  Serial.print(responseCode);
-  Serial.print("): ");
-  Serial.println(response);
+  if (HTTP_DEBUG) {
+    Serial.print(url);
+    Serial.print(" (");
+    Serial.print(responseCode);
+    Serial.print("): ");
+    Serial.println(response);
+  }
 
   return response;
 }

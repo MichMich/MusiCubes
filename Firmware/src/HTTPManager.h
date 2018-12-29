@@ -2,7 +2,8 @@
 #include <elapsedMillis.h>
 #include "config.h"
 
-#define STATE_UPDATE_INTERVAL 2500
+#define STATE_UPDATE_INTERVAL 1000
+#define HTTP_DEBUG false
 
 enum PlayState {
   Playing,

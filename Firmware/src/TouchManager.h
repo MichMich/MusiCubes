@@ -2,13 +2,12 @@
 #include "Adafruit_MPR121.h"
 #include <elapsedMillis.h>
 
-#define TOUCH_ADR 0x5A
 #define TOUCH_SDA D1
 #define TOUCH_SCL D2
+#define TOUCH_SENSORS 2
 #define TOUCH_THRESHOLD_TOUCH 255
-#define TOUCH_THRESHOLD_RELEASE 128
-#define TOUCH_CHECK_INTERVAL 10
-#define TOUCH_VALIDATION 3
+#define TOUCH_THRESHOLD_RELEASE 250
+#define TOUCH_CHECK_INTERVAL 25
 
 typedef void (*ButtonChangeCallback)(uint8_t button, bool state);
 
@@ -20,13 +19,11 @@ class TouchManager {
     void setButtonChangeCallback(ButtonChangeCallback callback);
 
   private:
+    uint16_t _sensorAddresses[TOUCH_SENSORS] = {0x5A, 0x5B};
+    bool _lastStates[TOUCH_SENSORS];
     elapsedMillis _intervalTimer;
     ButtonChangeCallback _buttonChangeCallback;
-    Adafruit_MPR121 _cap = Adafruit_MPR121();
-    uint16_t _lastStates;
-    uint16_t _activeStates;
-    void setStates(uint16_t states);
+    Adafruit_MPR121 _sensors[TOUCH_SENSORS];
+    void configureSensors();
     void checkStates();
-    void writeRegister(uint8_t reg, uint8_t value);
-    uint8_t _validationCount;
 };

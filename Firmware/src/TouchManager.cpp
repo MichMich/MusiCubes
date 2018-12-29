@@ -11,11 +11,7 @@ TouchManager::TouchManager() {
 }
 
 void TouchManager::init() {
-  if (!_cap.begin(TOUCH_ADR)) {
-    Serial.println("MPR121 not found, check wiring?");
-  }
-  _cap.setThresholds(TOUCH_THRESHOLD_TOUCH, TOUCH_THRESHOLD_RELEASE);
-  // writeRegister(MPR121_ECR, 0b01000001);
+  configureSensors();
 }
 
 void TouchManager::handle() {
@@ -23,49 +19,31 @@ void TouchManager::handle() {
     checkStates();
     _intervalTimer = 0;
   }
-  // _buttonChangeCallback(1, true)
 }
 
 void TouchManager::setButtonChangeCallback(ButtonChangeCallback callback) {
   _buttonChangeCallback = callback;
 }
 
-void TouchManager::checkStates() {
-  uint16_t newStates = _cap.touched();
+void TouchManager::configureSensors() {
+  for (uint8_t i = 0; i < TOUCH_SENSORS; i++) {
+    _sensors[i] = Adafruit_MPR121();
+    if (!_sensors[i].begin(_sensorAddresses[i])) {
+      Serial.println(String("TouchSensor not found: " + i));
+      continue;
+    }
 
-  if (newStates == _activeStates) {
-    _lastStates = newStates;
-    return;
-  }
-
-  if (newStates == _lastStates) {
-    _validationCount++;
-  } else {
-    _validationCount = 0;
-    _lastStates = newStates;
-  }
-
-  // Serial.print(newStates);
-  // Serial.print(" - ");
-  // Serial.println(_validationCount);
-
-  if (_validationCount >= TOUCH_VALIDATION) {
-    setStates(newStates);
+    _sensors[i].setThresholds(TOUCH_THRESHOLD_TOUCH, TOUCH_THRESHOLD_RELEASE);
+    // _sensors[i].writeRegister();
   }
 }
 
-void TouchManager::setStates(uint16_t states) {
-  for (uint8_t i = 0; i < 12; i++) {
-    if ((states & _BV(i)) != (_activeStates & _BV(i))) {
-      _buttonChangeCallback(i, states & _BV(i));
+void TouchManager::checkStates() {
+  for (uint8_t i = 0; i < TOUCH_SENSORS; i++) {
+    uint16_t newState = _sensors[i].touched() & 0b00000001;
+    if (newState != _lastStates[i]) {
+      _buttonChangeCallback(i, newState);
+      _lastStates[i] = newState;
     }
   }
-  _activeStates = states;
-  _validationCount = 0;
-}
-void TouchManager::writeRegister(uint8_t reg, uint8_t value) {
-    Wire.beginTransmission(TOUCH_ADR);
-    Wire.write((uint8_t)reg);
-    Wire.write((uint8_t)(value));
-    Wire.endTransmission();
 }
