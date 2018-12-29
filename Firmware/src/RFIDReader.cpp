@@ -6,7 +6,8 @@ RFIDReader::RFIDReader() : _mfrc522(MFRC522_SS_PIN, MFRC522_RST_PIN){
 }
 
 void RFIDReader::init() {
-  SPI.begin();			// Init SPI bus
+  SPI.begin();
+  _mfrc522.PCD_Reset();
   _mfrc522.PCD_Init();
 }
 
@@ -49,6 +50,9 @@ bool RFIDReader::isChanged(String cubeUID) {
 }
 
 void RFIDReader::cubeChanged(String cubeUID) {
+  if (RFID_DEBUG) {
+    Serial.println(String("CubeUID: " + cubeUID));
+  }
   _currentCube = cubeUID;
   _cubeChangedCallback(cubeUID);
 }
