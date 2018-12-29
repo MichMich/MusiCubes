@@ -2,11 +2,6 @@ const config = {
   http: {
     port: 8282
   },
-  mqtt: {
-    server: 'mqtt://mqtt.server.net',
-    username: 'username',
-    password: 'password'
-  },
   sonos: {
     baseUrl: 'http://localhost:5005',
     room: 'Livingroom'
