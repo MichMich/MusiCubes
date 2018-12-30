@@ -36,15 +36,20 @@ void HTTPManager::checkState() {
     Serial.println(state);
 
     if (state == String("PLAYING")) {
-      _playStateChangedCallback(Playing);
+      setPlayState(Playing);
     } else if (state == String("TRANSITIONING")) {
-      _playStateChangedCallback(Transitioning);
+      setPlayState(Transitioning);
     } else {
-      _playStateChangedCallback(Stopped);
+      setPlayState(Stopped);
     }
 
     _lastState = state;
   }
+}
+
+void HTTPManager::setPlayState(PlayState state) {
+  playState = state;
+  _playStateChangedCallback(state);
 }
 
 String HTTPManager::serverUrl(String endpoint) {

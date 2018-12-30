@@ -76,7 +76,12 @@ void buttonPressed(uint8_t buttonIndex, bool longPress) {
   Colors colors;
 
   if (rfidReader.changeTimer < TOUCH_IGNORE_AFTER_CUBE_CHANGE) {
-      Serial.println("Touch ignored because the cube has recently changed.");
+    Serial.println("Touch ignored because the cube has recently changed.");
+    return;
+  }
+
+  if (httpManager.playState != Playing) {
+    Serial.println("Not playing. Ignore button press.");
     return;
   }
 

@@ -36,8 +36,23 @@ void TouchManager::configureSensors() {
     _sensors[i].setThresholds(TOUCH_THRESHOLD_TOUCH, TOUCH_THRESHOLD_RELEASE);
     _sensors[i].writeRegister(MPR121_ECR, 0b00000001);      // Only activate sensor 0.
     _sensors[i].writeRegister(MPR121_DEBOUNCE, 0b01110111); // Maximum Debounce
-    _sensors[i].writeRegister(MPR121_CONFIG1, 0b11010000);
-    _sensors[i].writeRegister(MPR121_CONFIG2, 0b00111100);
+    _sensors[i].writeRegister(MPR121_CONFIG1, 0b11111111);
+    _sensors[i].writeRegister(MPR121_CONFIG2, 0b11111111);
+
+    // _sensors[i].writeRegister(MPR121_MHDR, 63);
+    // _sensors[i].writeRegister(MPR121_NHDR, 0x01);
+    // _sensors[i].writeRegister(MPR121_NCLR, 0xFF);
+    _sensors[i].writeRegister(MPR121_FDLR, 0xFF);
+
+    // _sensors[i].writeRegister(MPR121_MHDF, 63);
+    // _sensors[i].writeRegister(MPR121_NHDF, 0x05);
+    // _sensors[i].writeRegister(MPR121_NCLF, 0xFF);
+    _sensors[i].writeRegister(MPR121_FDLF, 0xFF);
+
+    // _sensors[i].writeRegister(MPR121_NHDT, 0x00);
+    // _sensors[i].writeRegister(MPR121_NCLT, 0xFF);
+    _sensors[i].writeRegister(MPR121_FDLT, 0xFF);
+
   }
 }
 
@@ -47,8 +62,8 @@ void TouchManager::checkStates() {
     if (newState != _lastStates[i]) {
       if (newState == 0) {
         if (_touchTimers[i] >= TOUCH_SHORTPRESS) {
-          _buttonPressCallback(i, _touchTimers[i] >= TOUCH_LONGPRESS);
           if (TOUCH_DEBUG) Serial.println("Button " + String(i) + " released after " + String(_touchTimers[i]) + " ms. Longpress: " + String(_touchTimers[i] >= TOUCH_LONGPRESS));
+          _buttonPressCallback(i, _touchTimers[i] >= TOUCH_LONGPRESS);
         } else {
           if (TOUCH_DEBUG) Serial.println("Button " + String(i) + " ignored. Too short: " + String(_touchTimers[i]) + " ms");
         }
