@@ -34,10 +34,10 @@ void TouchManager::configureSensors() {
     }
 
     _sensors[i].setThresholds(TOUCH_THRESHOLD_TOUCH, TOUCH_THRESHOLD_RELEASE);
-    _sensors[i].writeRegister(MPR121_ECR, 0b00000001); // Only activate sensor 0.
+    _sensors[i].writeRegister(MPR121_ECR, 0b00000001);      // Only activate sensor 0.
     _sensors[i].writeRegister(MPR121_DEBOUNCE, 0b01110111); // Maximum Debounce
-    _sensors[i].writeRegister(MPR121_CONFIG1, 0b11111111);
-    _sensors[i].writeRegister(MPR121_CONFIG2, 0b11111000);
+    _sensors[i].writeRegister(MPR121_CONFIG1, 0b11010000);
+    _sensors[i].writeRegister(MPR121_CONFIG2, 0b00111100);
   }
 }
 
