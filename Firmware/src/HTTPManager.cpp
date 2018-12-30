@@ -19,12 +19,15 @@ void HTTPManager::publishCubeIdentifier(String cubeUID) {
   makeRequest("cube/" + cubeUID);
 }
 
-void HTTPManager::publishButtonState(uint8_t buttonIndex, bool state) {
-  makeRequest("button/" + String(buttonIndex) + "/" + String(state ? "1" : "0"));
-}
-
 void HTTPManager::setPlayStateChangedCallback(PlayStateChangedCallback callback) {
   _playStateChangedCallback = callback;
+}
+
+void HTTPManager::changeVolume(VolumeChange change) {
+  makeRequest("volume/" + String(change == Up ? "up" : "down"));
+}
+void HTTPManager::skipSong(SkipDirection direction) {
+  makeRequest("skip/" + String(direction == Next ? "next" : "previous"));
 }
 
 void HTTPManager::checkState() {
