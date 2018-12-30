@@ -3,7 +3,7 @@ const playlist = {
     '04:12:3d:ba': 'favorite/Koffee',
     '04:1a:3d:ba': 'favorite/Lekkere%20nummertjes',
     '04:0e:3d:ba': 'spotify/now/spotify:user:defected.records:playlist:08M2kTqmlPNHygrNfrZJuQ',
-    '04:16:3d:ba': 'spotify/now/spotify:user:spotify:playlist:37i9dQZEVXcWW8vANM3Ai8',
+    '04:16:3d:ba': 'favorite/Discover%20Weekly',
 
     '04:31:3c:ba': 'playlist/kinderliedjes', //Kinderliedjes
     '04:25:3c:ba': 'favorite/BLUE MARLIN IBIZA RADIO', //Blue Marlin Radio

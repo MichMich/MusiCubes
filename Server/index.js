@@ -8,11 +8,13 @@ const baseUrl = config.sonos.baseUrl + '/' + config.sonos.room + '/'
 const CancelToken = axios.CancelToken;
 var cancelToken = null
 var lastPlayerState = null
+var lastCubeUid;
 
 console.log(playlist)
 
 app.get('/cube/:uid', function (req, res) {
   // console.log(req.params)
+  if (lastCubeUid === req.params.uid) return res.send('OK');
 
   const uri = getMusiCube(req.params.uid)
   if (!uri) {
@@ -21,6 +23,7 @@ app.get('/cube/:uid', function (req, res) {
   }
   requestSonosUri(uri)
   res.send('OK')
+  lastCubeUid = req.params.uid;
 })
 app.get('/button/:button/:state', function (req, res) {
   // console.log(req.params)
@@ -33,6 +36,24 @@ app.get('/button/:button/:state', function (req, res) {
 
   res.send('OK')
 })
+
+app.get('/volume/:change', function (req, res) {
+  if (req.params.change === 'up') {
+    requestSonosUri('volume/+3')
+  } else if (req.params.change === 'down') {
+    requestSonosUri('volume/-3')
+  }
+
+  res.send('OK')
+});
+
+app.get('/skip/:direction', function (req, res) {
+  if (req.params.direction === 'next' || req.params.direction === 'previous') {
+    requestSonosUri(req.params.direction)
+  }
+
+  res.send('OK')
+});
 
 app.get('/state', function (req,res) {
   axios.get(baseUrl + 'state')
@@ -68,6 +89,6 @@ function requestSonosUri(uri) {
       if (axios.isCancel(e)) {
         return console.log('Request canceled: ', uri);
       }
-      console.log(uri + ' is not a valid endpoint.')
+      console.log(uri + ' is not a valid endpoint: ' + e)
     })
 }
