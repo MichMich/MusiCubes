@@ -12,8 +12,10 @@ var lastCubeUid;
 
 console.log(playlist)
 
+/**
+ * Start music based on a cube UID.
+ */
 app.get('/cube/:uid', function (req, res) {
-  // console.log(req.params)
   if (lastCubeUid === req.params.uid) return res.send('OK');
 
   const uri = getMusiCube(req.params.uid)
@@ -22,39 +24,36 @@ app.get('/cube/:uid', function (req, res) {
     return console.log('Unknown MusiCube: ' + req.params.uid)
   }
   requestSonosUri(uri)
-  res.send('OK')
   lastCubeUid = req.params.uid;
-})
-app.get('/button/:button/:state', function (req, res) {
-  // console.log(req.params)
-
-  if (req.params.button == '0' && req.params.state == '1') {
-    requestSonosUri('volume/+3')
-  } else if (req.params.button == '1' && req.params.state == '1') {
-    requestSonosUri('volume/-3')
-  }
 
   res.send('OK')
 })
 
+/**
+ * Change the volume.
+ */
 app.get('/volume/:change', function (req, res) {
-  if (req.params.change === 'up') {
-    requestSonosUri('volume/+3')
-  } else if (req.params.change === 'down') {
-    requestSonosUri('volume/-3')
+  if (req.params.change === 'up' || req.params.change === 'down') {
+    requestSonosUri(req.params.change === 'up' ? 'volume/+3' : 'volume/-3', false);
   }
 
   res.send('OK')
 });
 
+/**
+ * Skip song.
+ */
 app.get('/skip/:direction', function (req, res) {
   if (req.params.direction === 'next' || req.params.direction === 'previous') {
-    requestSonosUri(req.params.direction)
+    requestSonosUri(req.params.direction, false)
   }
 
   res.send('OK')
 });
 
+/**
+ * Fetch player state.
+ */
 app.get('/state', function (req,res) {
   axios.get(baseUrl + 'state')
     .then(result => {
@@ -62,8 +61,16 @@ app.get('/state', function (req,res) {
     })
 })
 
+/**
+ * Start webserver.
+ */
 app.listen(config.http.port, () => console.log(`MusiCubes app listening on port ${config.http.port}!`))
 
+/**
+ * Fetch playlist based on UID.
+ *
+ * @param {String} identifier
+ */
 function getMusiCube(identifier) {
   if (identifier == '00:00:00:00') return 'pause'
   if (identifier in playlist) return playlist[identifier]
@@ -71,17 +78,27 @@ function getMusiCube(identifier) {
   return false
 }
 
-function requestSonosUri(uri) {
+/**
+ * Request Sonos http api uri.
+ * @param {String} uri
+ * @param {Bool} cancelable
+ */
+function requestSonosUri(uri, cancelable = true) {
   console.log('Requesting: ' + uri)
 
-  if (cancelToken) {
+  if (cancelable && cancelToken) {
     cancelToken.cancel();
   }
 
-  cancelToken = CancelToken.source();
-  axios.get(baseUrl + uri,{
-    cancelToken: cancelToken.token
-  })
+  const params = {};
+  if (cancelable) {
+    cancelToken = CancelToken.source();
+    params = {
+      cancelToken: cancelToken.token
+    }
+  }
+
+  axios.get(baseUrl + uri, params)
     .then(result => {
       console.log('Request confirmed: ' + uri)
     })
