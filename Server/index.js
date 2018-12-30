@@ -90,7 +90,7 @@ function requestSonosUri(uri, cancelable = true) {
     cancelToken.cancel();
   }
 
-  const params = {};
+  var params = {};
   if (cancelable) {
     cancelToken = CancelToken.source();
     params = {
