@@ -9,7 +9,7 @@
 #define TOUCH_SENSORS 2
 #define TOUCH_THRESHOLD_TOUCH 255
 #define TOUCH_THRESHOLD_RELEASE 16
-#define TOUCH_CHECK_INTERVAL 25
+#define TOUCH_CHECK_INTERVAL 10
 
 typedef void (*ButtonChangeCallback)(uint8_t button, bool state);
 
@@ -24,6 +24,7 @@ class TouchManager {
     uint16_t _sensorAddresses[TOUCH_SENSORS] = {0x5A, 0x5B};
     bool _lastStates[TOUCH_SENSORS];
     elapsedMillis _intervalTimer;
+    elapsedMillis _touchTimers[TOUCH_SENSORS];
     ButtonChangeCallback _buttonChangeCallback;
     Adafruit_MPR121 _sensors[TOUCH_SENSORS];
     void configureSensors();

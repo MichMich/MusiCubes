@@ -35,9 +35,9 @@ void TouchManager::configureSensors() {
 
     _sensors[i].setThresholds(TOUCH_THRESHOLD_TOUCH, TOUCH_THRESHOLD_RELEASE);
     _sensors[i].writeRegister(MPR121_ECR, 0b00000001); // Only activate sensor 0.
-    _sensors[i].writeRegister(MPR121_DEBOUNCE, 0xFF); // Maximum Debounce
-    _sensors[i].writeRegister(MPR121_CONFIG1, 0xFF); // Max filtering.
-    _sensors[i].writeRegister(MPR121_CONFIG2, 0xFF); // Max filtering.
+    _sensors[i].writeRegister(MPR121_DEBOUNCE, 0b01110111); // Maximum Debounce
+    _sensors[i].writeRegister(MPR121_CONFIG1, 0b11111111);
+    _sensors[i].writeRegister(MPR121_CONFIG2, 0b11111000);
   }
 }
 
@@ -49,12 +49,15 @@ void TouchManager::checkStates() {
         Serial.print("Button " + String(i) + ": ");
         Serial.print(String(newState));
 
-        Serial.print(" - (B: " +  String(_sensors[i].baselineData(0)));
-        Serial.print(" F: " +  String(_sensors[i].filteredData(0)));
-        Serial.print(" D: " +  String(_sensors[i].baselineData(0) - _sensors[i].filteredData(0)));
-        Serial.println(")");
+        // Serial.print(" - (B: " +  String(_sensors[i].baselineData(0)));
+        // Serial.print(" F: " +  String(_sensors[i].filteredData(0)));
+        // Serial.print(" D: " +  String(_sensors[i].baselineData(0) - _sensors[i].filteredData(0)));
+        // Serial.print(") ");
+
+        Serial.println(" - " + String(_touchTimers[i]) + " ms");
       }
       _buttonChangeCallback(i, newState);
+      _touchTimers[i] = 0;
       _lastStates[i] = newState;
     }
   }

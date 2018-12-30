@@ -5,8 +5,8 @@
 
 #define RFID_DEBUG true
 
-#define MFRC522_RST_PIN D3
-#define MFRC522_SS_PIN  D4
+#define MFRC522_RST_PIN D4
+#define MFRC522_SS_PIN  D3
 
 #define RFID_READ_INTERVAL 100
 #define RFID_CHECK_REPEAT 3

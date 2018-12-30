@@ -7,7 +7,9 @@ RFIDReader::RFIDReader() : _mfrc522(MFRC522_SS_PIN, MFRC522_RST_PIN){
 
 void RFIDReader::init() {
   SPI.begin();
+  delay(50);
   _mfrc522.PCD_Reset();
+  delay(50);
   _mfrc522.PCD_Init();
 }
 
