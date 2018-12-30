@@ -11,6 +11,16 @@ enum PlayState {
   Transitioning
 };
 
+enum VolumeChange {
+  Up,
+  Down
+};
+
+enum SkipDirection {
+  Next,
+  Previous
+};
+
 typedef void (*PlayStateChangedCallback)(PlayState playState);
 
 class HTTPManager {
@@ -21,6 +31,8 @@ class HTTPManager {
     void publishCubeIdentifier(String cubeUID);
     void publishButtonState(uint8_t buttonIndex, bool state);
     void setPlayStateChangedCallback(PlayStateChangedCallback callback);
+    void changeVolume(VolumeChange change);
+    void skipSong(SkipDirection direction);
 
   private:
     Config _config;

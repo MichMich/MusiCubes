@@ -6,6 +6,8 @@
 #include "HTTPManager.h"
 #include "TouchManager.h"
 
+#define TOUCH_IGNORE_AFTER_CUBE_CHANGE 1000
+
 LedController ledController;
 RFIDReader rfidReader;
 HTTPManager httpManager;
@@ -13,7 +15,7 @@ TouchManager touchManager;
 
 // Define the callbacks. The implementation is at the bottom.
 void cubeChanged(String cubeUID);
-void buttonChanged(uint8_t buttonIndex, bool state);
+void buttonPressed(uint8_t buttonIndex, bool state);
 void playStateChanged(PlayState playState);
 
 // Setup & Loop
@@ -31,7 +33,7 @@ void setup() {
   touchManager.init();
 
   rfidReader.setCubeChangeCallback(cubeChanged);
-  touchManager.setButtonChangeCallback(buttonChanged);
+  touchManager.setButtonPressCallback(buttonPressed);
   httpManager.setPlayStateChangedCallback(playStateChanged);
 }
 
@@ -70,11 +72,19 @@ void playStateChanged(PlayState playState) {
   }
 }
 
-void buttonChanged(uint8_t buttonIndex, bool state) {
+void buttonPressed(uint8_t buttonIndex, bool longPress) {
   Colors colors;
 
-  if (state) {
-    httpManager.publishButtonState(buttonIndex, state);
-    ledController.flashColor(buttonIndex == 0 ? colors.button1Pressed : colors.button2Pressed);
+  if (rfidReader.changeTimer < TOUCH_IGNORE_AFTER_CUBE_CHANGE) {
+      Serial.println("Touch ignored because the cube has recently changed.");
+    return;
+  }
+
+  if (!longPress) {
+    httpManager.changeVolume(buttonIndex == 0 ? Up : Down);
+    ledController.flashColor(buttonIndex == 0 ? colors.volumeUp : colors.volumeDown);
+  } else {
+    httpManager.skipSong(buttonIndex == 0 ? Next : Previous);
+    ledController.flashColor(buttonIndex == 0 ? colors.nextSong : colors.previousSong);
   }
 }

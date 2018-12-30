@@ -21,8 +21,8 @@ void TouchManager::handle() {
   }
 }
 
-void TouchManager::setButtonChangeCallback(ButtonChangeCallback callback) {
-  _buttonChangeCallback = callback;
+void TouchManager::setButtonPressCallback(ButtonPressCallback callback) {
+  _buttonPressCallback = callback;
 }
 
 void TouchManager::configureSensors() {
@@ -34,10 +34,10 @@ void TouchManager::configureSensors() {
     }
 
     _sensors[i].setThresholds(TOUCH_THRESHOLD_TOUCH, TOUCH_THRESHOLD_RELEASE);
-
-    // Only activate sensor 0.
-    _sensors[i].writeRegister(MPR121_ECR, 0b00000001);
-    _sensors[i].writeRegister(MPR121_AUTOCONFIG0, 0b00010011);
+    _sensors[i].writeRegister(MPR121_ECR, 0b00000001); // Only activate sensor 0.
+    _sensors[i].writeRegister(MPR121_DEBOUNCE, 0b01110111); // Maximum Debounce
+    _sensors[i].writeRegister(MPR121_CONFIG1, 0b11111111);
+    _sensors[i].writeRegister(MPR121_CONFIG2, 0b11111000);
   }
 }
 
@@ -45,16 +45,16 @@ void TouchManager::checkStates() {
   for (uint8_t i = 0; i < TOUCH_SENSORS; i++) {
     uint16_t newState = _sensors[i].touched() & 0b00000001;
     if (newState != _lastStates[i]) {
-      if (TOUCH_DEBUG) {
-        Serial.print("Button " + String(i) + ": ");
-        Serial.print(String(newState));
-
-        Serial.print(" - (B: " +  String(_sensors[i].baselineData(0)));
-        Serial.print(" F: " +  String(_sensors[i].filteredData(0)));
-        Serial.print(" D: " +  String(_sensors[i].baselineData(0) - _sensors[i].filteredData(0)));
-        Serial.println(")");
+      if (newState == 0) {
+        if (_touchTimers[i] >= TOUCH_SHORTPRESS) {
+          _buttonPressCallback(i, _touchTimers[i] >= TOUCH_LONGPRESS);
+          if (TOUCH_DEBUG) Serial.println("Button " + String(i) + " released after " + String(_touchTimers[i]) + " ms. Longpress: " + String(_touchTimers[i] >= TOUCH_LONGPRESS));
+        } else {
+          if (TOUCH_DEBUG) Serial.println("Button " + String(i) + " ignored. Too short: " + String(_touchTimers[i]) + " ms");
+        }
       }
-      _buttonChangeCallback(i, newState);
+
+      _touchTimers[i] = 0;
       _lastStates[i] = newState;
     }
   }
