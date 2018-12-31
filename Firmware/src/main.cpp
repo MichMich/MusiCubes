@@ -51,9 +51,9 @@ void cubeChanged(String cubeUID) {
 
   httpManager.publishCubeIdentifier(cubeUID);
   if (rfidReader.cubePresent()) {
-    ledController.setBaseColor(colors.newCube);
+    ledController.flashColor(colors.newCube);
   } else {
-    ledController.setBaseColor(colors.cubeRemoved);
+    ledController.flashColor(colors.cubeRemoved);
   }
 }
 
@@ -82,6 +82,7 @@ void buttonPressed(uint8_t buttonIndex, bool longPress) {
 
   if (httpManager.playState != Playing) {
     Serial.println("Not playing. Ignore button press.");
+    ledController.flashColor(colors.cubeRemoved);
     return;
   }
 
