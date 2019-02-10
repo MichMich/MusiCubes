@@ -33,6 +33,7 @@ class HTTPManager {
     void setPlayStateChangedCallback(PlayStateChangedCallback callback);
     void changeVolume(VolumeChange change);
     void skipSong(SkipDirection direction);
+    PlayState playState;
 
   private:
     Config _config;
@@ -42,4 +43,5 @@ class HTTPManager {
     void checkState();
     String serverUrl(String endpoint);
     String makeRequest(String uri);
+    void setPlayState(PlayState state);
 };
