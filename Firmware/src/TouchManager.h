@@ -11,8 +11,10 @@
 #define TOUCH_THRESHOLD_RELEASE 1
 #define TOUCH_CHECK_INTERVAL 5
 
-#define TOUCH_SHORTPRESS 50
+#define TOUCH_SHORTPRESS 40
 #define TOUCH_LONGPRESS 500
+
+#define MINIMUM_NUM_OF_FIELDS_ACTIVE 1
 
 typedef void (*ButtonPressCallback)(uint8_t button, bool longPress);
 
@@ -26,10 +28,12 @@ class TouchManager {
   private:
     uint16_t _sensorAddresses[TOUCH_SENSORS] = {0x5A, 0x5B};
     bool _lastStates[TOUCH_SENSORS];
+    uint8_t _lastFields[TOUCH_SENSORS];
     elapsedMillis _intervalTimer;
     elapsedMillis _touchTimers[TOUCH_SENSORS];
     ButtonPressCallback _buttonPressCallback;
     Adafruit_MPR121 _sensors[TOUCH_SENSORS];
     void configureSensors();
     void checkStates();
+    uint8_t activeFields(uint8_t sensorIndex);
 };
