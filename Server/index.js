@@ -66,7 +66,7 @@ app.get('/playpause', function (req, res) {
  * Log string.
  */
 app.get('/log/:string', function (req, res) {
-  console.log('LOG: ' + req.params.string)
+  console.log('[' + req.ip + '] ' + req.params.string)
   res.send('OK')
 });
 
