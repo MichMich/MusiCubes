@@ -1,3 +1,5 @@
+require('log-timestamp')(function() { return '[' + new Date().toString() + '] ' });
+
 var config = require('./config.js')
 var playlist = require('./playlist.js')
 var express = require('express')
