@@ -54,6 +54,23 @@ app.get('/skip/:direction', function (req, res) {
 });
 
 /**
+ * Toggle play/pause.
+ */
+app.get('/playpause', function (req, res) {
+  requestSonosUri('playpause', false)
+
+  res.send('OK')
+});
+
+/**
+ * Log string.
+ */
+app.get('/log/:string', function (req, res) {
+  console.log('LOG: ' + req.params.string)
+  res.send('OK')
+});
+
+/**
  * Fetch player state.
  */
 app.get('/state', function (req,res) {
