@@ -35,6 +35,8 @@ void setup() {
   rfidReader.setCubeChangeCallback(cubeChanged);
   touchManager.setButtonPressCallback(buttonPressed);
   httpManager.setPlayStateChangedCallback(playStateChanged);
+
+  httpManager.log("Booted");
 }
 
 void loop() {
@@ -80,11 +82,13 @@ void buttonPressed(uint8_t buttonIndex, bool longPress) {
     return;
   }
 
+  /*
   if (httpManager.playState != Playing) {
     Serial.println("Not playing. Ignore button press.");
     ledController.flashColor(colors.cubeRemoved);
     return;
   }
+  */
 
   if (!longPress) {
     httpManager.changeVolume(buttonIndex == 0 ? Up : Down);

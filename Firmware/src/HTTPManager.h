@@ -33,6 +33,7 @@ class HTTPManager {
     void setPlayStateChangedCallback(PlayStateChangedCallback callback);
     void changeVolume(VolumeChange change);
     void skipSong(SkipDirection direction);
+    void log(String string);
     PlayState playState;
 
   private:

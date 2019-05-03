@@ -26,8 +26,13 @@ void HTTPManager::setPlayStateChangedCallback(PlayStateChangedCallback callback)
 void HTTPManager::changeVolume(VolumeChange change) {
   makeRequest("volume/" + String(change == Up ? "up" : "down"));
 }
+
 void HTTPManager::skipSong(SkipDirection direction) {
   makeRequest("skip/" + String(direction == Next ? "next" : "previous"));
+}
+
+void HTTPManager::log(String string) {
+  makeRequest("log/" + string);
 }
 
 void HTTPManager::checkState() {
