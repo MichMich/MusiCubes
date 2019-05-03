@@ -78,6 +78,9 @@ app.get('/state', function (req,res) {
     .then(result => {
       res.send(result.data.playbackState)
     })
+    .catch(e => {
+	console.log('Unable to fetch player state.')
+    })
 })
 
 /**
@@ -125,6 +128,6 @@ function requestSonosUri(uri, cancelable = true) {
       if (axios.isCancel(e)) {
         return console.log('Request canceled: ', uri);
       }
-      console.log(uri + ' is not a valid endpoint: ' + e)
+      console.log(uri + ' is not a valid endpoint.')
     })
 }
